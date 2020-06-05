@@ -75,29 +75,70 @@ contract JeuneDiplome {
         NbDiplomes = 0;
     }
 
-    function ajouter_etablisement(Etablisement memory e) public {
+    function ajouter_etablisement(Etablisement memory e) private {
         NbEtablisements += 1;
         Etablisements[NbEtablisements] = e;
     }
 
-    function ajouter_entreprise(Entreprise memory e) public {
+    function ajouter_entreprise(Entreprise memory e) private {
         NbEntreprises += 1;
         Entreprises[NbEntreprises] = e;
     }
 
-    function ajouter_etudiant(Etudiant memory e) public {
+    function ajouter_etudiant(Etudiant memory e) private {
+        // etablisement
         NbEtudiants += 1;
         Etudiants[NbEtudiants] = e;
     }
 
-    function ajouter_diplome(Diplome memory d) public {
+    function ajouter_diplome(Diplome memory d) private {
+        // etablisement
         NbDiplomes += 1;
         Diplomes[NbDiplomes] = d;
     }
 
-    function evaluer(Etudiant memory e, Diplome memory d) public {}
+    //
+    function ajouter_etablisement(string memory nom) public {
+        Etablisement memory e;
+        e.nom_etablisement = nom;
+        ajouter_etablisement(e);
+    }
 
-    function verifier(Diplome memory d) public view returns (bool) {}
+    function ajouter_entreprise(string memory nom) public {
+        Entreprise memory e;
+        e.Nom = nom;
+        ajouter_entreprise(e);
+    }
+
+    function ajouter_etudiant(string memory Nom, string memory Prenom) public {
+        Etudiant memory e;
+        e.Nom = Nom;
+        e.Prenom = Prenom;
+        ajouter_etudiant(e);
+    }
+
+    function ajouter_diplome(
+        uint256 id_titulaire,
+        string memory nom_etablisement
+    ) public {
+        // etablisement
+        Diplome memory d;
+        d.id_titulaire = id_titulaire;
+        d.nom_etablisement = nom_etablisement;
+        ajouter_diplome(d);
+    }
+
+    // établissement update info titulaire
+
+    function evaluer(Etudiant memory e, Diplome memory d) public {
+        // entreprise qui evalue
+        // remuneration 15 token
+    }
+
+    function verifier(Diplome memory d) public view returns (bool) {
+        // entreprise qui verifier
+        // frais 10 token
+    }
 }
 // ajout etudiant
 //["Nom","Prenom","Date_naisance","Sexe","Nationalite","Status_civil","Adresse","Courriel","Telephone","Section","Sujet_pfe","Entreprise_stage_pfe","Maitre_stage",1,2,"Evaluation"]
