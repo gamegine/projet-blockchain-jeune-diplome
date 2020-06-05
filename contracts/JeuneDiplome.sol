@@ -1,12 +1,17 @@
 pragma solidity ^0.5.3;
 pragma experimental ABIEncoderV2;
 
+import "./Token.sol";
+
 
 /**
  * @title JeuneDiplome
  * @dev vérification de l’authenticité des diplômes délivrés par les établissements d’enseignement supérieur
  */
 contract JeuneDiplome {
+    address private owner;
+    address private token;
+
     struct Etablisement {
         string nom_etablisement;
         string type_str;
@@ -72,7 +77,13 @@ contract JeuneDiplome {
     uint256 public NbEntreprises;
     uint256 public NbDiplomes;
 
-    constructor() public {
+    /**
+     * @dev Set contract deployer as owner & set token contract address
+     */
+    constructor(address tokenaddress) public {
+        token = tokenaddress;
+        owner = msg.sender; // 'msg.sender' is sender of current call, contract deployer for a constructor
+
         NbEtablisements = 0;
         NbEtudiants = 0;
         NbEntreprises = 0;
@@ -160,15 +171,30 @@ contract JeuneDiplome {
         Etudiants[etudiantid].Evaluation = Evaluation;
         // entreprise qui evalue
         // remuneration 15 token
+        // frais 10 token
+        require(
+            Token(token).allowance(owner, address(this)) >= 15, // check the amount authorized by owner> = nb token user buy
+            "token not allowed"
+        );
+        require(
+            Token(token).transferFrom(owner, msg.sender, 15), // token transfer
+            "transfert fail"
+        );
     }
 
-    function verifier(uint256 diplomeid)
-        public
-        view
-        returns (bool, Diplome memory)
-    {
-        // entreprise qui verifier
+    event verifierresult(bool, Diplome);
+
+    function verifier(uint256 diplomeid) public returns (bool, Diplome memory) {
         // frais 10 token
+        require(
+            Token(token).allowance(msg.sender, address(this)) >= 10, // check the amount authorized by owner> = nb token user buy
+            "token not allowed"
+        );
+        require(
+            Token(token).transferFrom(msg.sender, owner, 10), // token transfer
+            "transfert fail"
+        );
+        emit verifierresult(Diplomes[diplomeid].exist, Diplomes[diplomeid]);
         return (Diplomes[diplomeid].exist, Diplomes[diplomeid]);
     }
 }
