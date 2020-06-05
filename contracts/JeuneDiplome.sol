@@ -129,8 +129,21 @@ contract JeuneDiplome {
     }
 
     // établissement update info titulaire
-
-    function evaluer(Etudiant memory e, Diplome memory d) public {
+    function evaluer(
+        uint256 etudiantid,
+        string memory Sujet_pfe,
+        string memory Entreprise_stage_pfe,
+        string memory Maitre_stage,
+        uint256 Date_debut_stage,
+        uint256 Date_fin_stage,
+        string memory Evaluation
+    ) public {
+        Etudiants[etudiantid].Sujet_pfe = Sujet_pfe;
+        Etudiants[etudiantid].Entreprise_stage_pfe = Entreprise_stage_pfe;
+        Etudiants[etudiantid].Maitre_stage = Maitre_stage;
+        Etudiants[etudiantid].Date_debut_stage = Date_debut_stage;
+        Etudiants[etudiantid].Date_fin_stage = Date_fin_stage;
+        Etudiants[etudiantid].Evaluation = Evaluation;
         // entreprise qui evalue
         // remuneration 15 token
     }
@@ -138,6 +151,7 @@ contract JeuneDiplome {
     function verifier(Diplome memory d) public view returns (bool) {
         // entreprise qui verifier
         // frais 10 token
+        return Diplomes[diplomeid].exist;
     }
 }
 // ajout etudiant
