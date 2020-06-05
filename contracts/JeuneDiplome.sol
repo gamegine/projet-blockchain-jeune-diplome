@@ -16,6 +16,7 @@ contract JeuneDiplome {
         uint256 id_agent;
     }
     struct Etudiant {
+        bool exist;
         string Nom;
         string Prenom;
         string Date_naisance;
@@ -34,6 +35,7 @@ contract JeuneDiplome {
         string Evaluation;
     }
     struct Diplome {
+        bool exist;
         uint256 id_titulaire;
         string nom_etablisement;
         uint256 id_ees;
@@ -55,8 +57,10 @@ contract JeuneDiplome {
         string Site_web;
     }
     mapping(uint256 => Etablisement) public Etablisements;
+    mapping(address => uint256) AddressEtablisements;
     mapping(uint256 => Etudiant) Etudiants;
     mapping(uint256 => Entreprise) public Entreprises;
+    mapping(address => uint256) public AddressEntreprises;
     mapping(uint256 => Diplome) public Diplomes;
 
     function get_Etudiants(uint256 id) public view returns (Etudiant memory) {
@@ -75,24 +79,28 @@ contract JeuneDiplome {
         NbDiplomes = 0;
     }
 
-    function ajouter_etablisement(Etablisement memory e) private {
+    function ajouter_etablisement(Etablisement memory e, address a) private {
         NbEtablisements += 1;
         Etablisements[NbEtablisements] = e;
+        AddressEtablisements[a] = NbEtablisements;
     }
 
-    function ajouter_entreprise(Entreprise memory e) private {
+    function ajouter_entreprise(Entreprise memory e, address a) private {
         NbEntreprises += 1;
         Entreprises[NbEntreprises] = e;
+        AddressEntreprises[a] = NbEntreprises;
     }
 
     function ajouter_etudiant(Etudiant memory e) private {
         // etablisement
+        e.exist = true;
         NbEtudiants += 1;
         Etudiants[NbEtudiants] = e;
     }
 
     function ajouter_diplome(Diplome memory d) private {
         // etablisement
+        d.exist = true;
         NbDiplomes += 1;
         Diplomes[NbDiplomes] = d;
     }
@@ -101,34 +109,37 @@ contract JeuneDiplome {
     function ajouter_etablisement(string memory nom) public {
         Etablisement memory e;
         e.nom_etablisement = nom;
-        ajouter_etablisement(e);
+        ajouter_etablisement(e, msg.sender);
     }
 
     function ajouter_entreprise(string memory nom) public {
         Entreprise memory e;
         e.Nom = nom;
-        ajouter_entreprise(e);
+        ajouter_entreprise(e, msg.sender);
     }
 
     function ajouter_etudiant(string memory Nom, string memory Prenom) public {
+        uint256 id = AddressEtablisements[msg.sender];
+        require(id != 0, "not etablisement");
         Etudiant memory e;
         e.Nom = Nom;
         e.Prenom = Prenom;
         ajouter_etudiant(e);
     }
 
-    function ajouter_diplome(
-        uint256 id_titulaire,
-        string memory nom_etablisement
-    ) public {
+    function ajouter_diplome(uint256 id_titulaire) public {
         // etablisement
+        uint256 id = AddressEtablisements[msg.sender];
+        require(id != 0, "not etablisement");
+        require(Etudiants[id_titulaire].exist == true, "not Etudiants");
         Diplome memory d;
         d.id_titulaire = id_titulaire;
-        d.nom_etablisement = nom_etablisement;
+        d.nom_etablisement = Etablisements[id].nom_etablisement;
         ajouter_diplome(d);
     }
 
     // établissement update info titulaire
+
     function evaluer(
         uint256 etudiantid,
         string memory Sujet_pfe,
@@ -138,6 +149,9 @@ contract JeuneDiplome {
         uint256 Date_fin_stage,
         string memory Evaluation
     ) public {
+        uint256 id = AddressEntreprises[msg.sender];
+        require(id != 0, "no Entreprises");
+        require(Etudiants[etudiantid].exist == true, "not Etudiants");
         Etudiants[etudiantid].Sujet_pfe = Sujet_pfe;
         Etudiants[etudiantid].Entreprise_stage_pfe = Entreprise_stage_pfe;
         Etudiants[etudiantid].Maitre_stage = Maitre_stage;
@@ -148,11 +162,13 @@ contract JeuneDiplome {
         // remuneration 15 token
     }
 
-    function verifier(Diplome memory d) public view returns (bool) {
+    function verifier(uint256 diplomeid)
+        public
+        view
+        returns (bool, Diplome memory)
+    {
         // entreprise qui verifier
         // frais 10 token
-        return Diplomes[diplomeid].exist;
+        return (Diplomes[diplomeid].exist, Diplomes[diplomeid]);
     }
 }
-// ajout etudiant
-//["Nom","Prenom","Date_naisance","Sexe","Nationalite","Status_civil","Adresse","Courriel","Telephone","Section","Sujet_pfe","Entreprise_stage_pfe","Maitre_stage",1,2,"Evaluation"]
