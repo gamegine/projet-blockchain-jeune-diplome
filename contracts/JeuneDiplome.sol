@@ -63,15 +63,41 @@ contract JeuneDiplome {
         return Etudiants[id];
     }
 
-    function ajouter_etablisement(Etablisement memory e) public {}
+    uint256 public NbEtablisements;
+    uint256 public NbEtudiants;
+    uint256 public NbEntreprises;
+    uint256 public NbDiplomes;
 
-    function ajouter_entreprise(Entreprise memory e) public {}
+    constructor() public {
+        NbEtablisements = 0;
+        NbEtudiants = 0;
+        NbEntreprises = 0;
+        NbDiplomes = 0;
+    }
 
-    function ajouter_etudiant(Etudiant memory e) public {}
+    function ajouter_etablisement(Etablisement memory e) public {
+        NbEtablisements += 1;
+        Etablisements[NbEtablisements] = e;
+    }
 
-    function ajouter_diplome(Diplome memory d) public {}
+    function ajouter_entreprise(Entreprise memory e) public {
+        NbEntreprises += 1;
+        Entreprises[NbEntreprises] = e;
+    }
+
+    function ajouter_etudiant(Etudiant memory e) public {
+        NbEtudiants += 1;
+        Etudiants[NbEtudiants] = e;
+    }
+
+    function ajouter_diplome(Diplome memory d) public {
+        NbDiplomes += 1;
+        Diplomes[NbDiplomes] = d;
+    }
 
     function evaluer(Etudiant memory e, Diplome memory d) public {}
 
     function verifier(Diplome memory d) public view returns (bool) {}
 }
+// ajout etudiant
+//["Nom","Prenom","Date_naisance","Sexe","Nationalite","Status_civil","Adresse","Courriel","Telephone","Section","Sujet_pfe","Entreprise_stage_pfe","Maitre_stage",1,2,"Evaluation"]
