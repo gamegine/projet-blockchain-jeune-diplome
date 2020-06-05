@@ -55,9 +55,13 @@ contract JeuneDiplome {
         string Site_web;
     }
     mapping(uint256 => Etablisement) public Etablisements;
-    mapping(uint256 => Etudiant) public Etudiants;
+    mapping(uint256 => Etudiant) Etudiants;
     mapping(uint256 => Entreprise) public Entreprises;
     mapping(uint256 => Diplome) public Diplomes;
+
+    function get_Etudiants(uint256 id) public view returns (Etudiant memory) {
+        return Etudiants[id];
+    }
 
     function ajouter_etablisement(Etablisement memory e) public {}
 
