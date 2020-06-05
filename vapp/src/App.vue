@@ -11,6 +11,11 @@
       <h2>Simple Storage</h2>
       <SimpleStorage />
     </div>
+
+    <div class="section">
+      <h2>Token</h2>
+      <Token />
+    </div>
   </div>
 
   <div v-else>Loading...</div>
@@ -18,14 +23,15 @@
 
 <script>
 import SimpleStorage from "./SimpleStorage";
+import Token from "./Token";
 import { mapGetters } from "vuex";
 
 export default {
   name: "app",
   components: {
     SimpleStorage,
+    Token,
   },
-
   computed: mapGetters("drizzle", ["isDrizzleInitialized"]),
 };
 </script>
