@@ -3,8 +3,8 @@ import "./ERC20Basic.sol";
 
 
 contract Token is ERC20Basic {
-    string public symbol = "FTC";
-    string public name = "First Token";
+    string public symbol = "AUT";
+    string public name = "AuthenticityToken";
     uint8 public decimal = 15;
 
     using SafeMath for uint256;
